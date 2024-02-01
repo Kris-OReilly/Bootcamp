@@ -17,4 +17,3 @@ if student_num.isnumeric():
     
 else:    
     print("Error - You did not enter a number. Check and try again.\n")
-
