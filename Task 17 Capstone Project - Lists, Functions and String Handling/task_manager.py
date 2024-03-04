@@ -80,7 +80,7 @@ def reg_user():
         # - Request input of a new username
         new_username = input("New Username: ")
             
-        # - Opening the user file and check the input against existing usernames
+        # - Open the user file and check the input against existing usernames
         with open('user.txt', 'r') as users:
             lines = users.readlines()
         for line in lines:
@@ -111,8 +111,6 @@ def reg_user():
             else:
                 print("Passwords do not match")
             
-
-
 
 def add_task():
     '''Allow a user to add a new task to task.txt file
@@ -182,6 +180,8 @@ def view_all():
         disp_str += f"Task Description: \n {t['description']}\n"
         print(disp_str)
 
+def edit_task():
+    print("Function")
 
 def view_mine():
     '''Reads the task from task.txt file and prints to the console in the 
@@ -190,12 +190,70 @@ def view_mine():
     '''
     for t in task_list:
         if t['username'] == curr_user:
-            disp_str = f"Task: \t\t {t['title']}\n"
-            disp_str += f"Assigned to: \t {t['username']}\n"
-            disp_str += f"Date Assigned: \t {t['assigned_date'].strftime(DATETIME_STRING_FORMAT)}\n"
-            disp_str += f"Due Date: \t {t['due_date'].strftime(DATETIME_STRING_FORMAT)}\n"
-            disp_str += f"Task Description: \n {t['description']}\n"
+            disp_str = f"\nTask: \t\t\t | {t['title']}\n"
+            disp_str += f"Assigned to: \t\t | {t['username']}\n"
+            disp_str += f"Date Assigned: \t\t | {t['assigned_date'].strftime(DATETIME_STRING_FORMAT)}\n"
+            disp_str += f"Due Date: \t\t | {t['due_date'].strftime(DATETIME_STRING_FORMAT)}\n"
+            disp_str += f"Task Description: \t | {t['description']}\n"
             print(disp_str)
+
+    # Read in task data
+    with open('tasks.txt', 'r') as file:
+        tasks = file.readlines()
+
+    # Initialize a dictionary to store tasks for each user
+    user_tasks = {}
+
+    # Process each task and assign numbers
+    for task in tasks:
+        user, task_description, _, _, _, _ = task.strip().split(';')
+        user_tasks.setdefault(user, []).append(task_description)
+
+    
+    # Print the numbered tasks for each user
+    for user, user_task_list in user_tasks.items():
+        if user == 'admin':
+            continue
+        else:    
+            print(f"{user}'s tasks:")
+        for i, task in enumerate(user_task_list, start=1):
+            print('-' * 50,'\n' f"{i}. {task}")
+            print()
+
+    # Initialize a list to store the numbered tasks
+    numbered_tasks = [] 
+
+    for user, user_task_list in user_tasks.items():
+        user_numbered_tasks = [] # Initialize a new list for each user
+
+        for i, task in enumerate(user_task_list, start=1):
+            user_numbered_tasks.append(i)
+        numbered_tasks.append(user_numbered_tasks)
+    
+    # present a menu for user to select a specific task
+    while True:
+        print()
+        task_menu = int(input('''Type a task number to select it or enter -1 to return to the main menu:'''))
+
+        # Check if the entered task number is valid
+        if task_menu in user_numbered_tasks:
+            edit_task()
+            break
+        elif task_menu == -1:
+            break
+        else:    
+            print("Task number does not match. Please enter a valid number")
+        
+        
+
+
+
+
+
+
+
+
+
 
 
 while True:
