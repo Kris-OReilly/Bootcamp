@@ -180,8 +180,46 @@ def view_all():
         disp_str += f"Task Description: \n {t['description']}\n"
         print(disp_str)
 
+def task_option():
+    while True:
+        print()
+        task_edit = input("Type 'm' to mark task complete or 'e' to edit task:").lower()
+
+        if task_edit == 'm':
+            mark_complete()
+        elif task_edit == 'e':
+            edit_task()
+        else:
+            print("You didn't choose 'm' or 'e'")
+
+
+
 def edit_task():
-    print("Function")
+    # open tasks.txt, locate relevant task number, check the task is not complete.
+    # If not complete, allow user to edit the username of task assigned or the due date of task.
+
+def mark_complete(tasks_file, user, task_index):
+    # open tasks.txt, locate relevant task number and mark as complete.
+    with open(tasks_file, 'r') as file:
+        lines = file.readlines()
+
+    line_index = 0
+    for i, line in enumerate(lines):
+        if line.startswith(user):
+            line_index = i
+            break
+    
+    # Update the completion status in the line
+    parts = lines[line_index].strip().split(';')
+    parts[5] = 'Yes'  # Assuming completion status is the 6th element
+    lines[line_index] = ';'.join(parts) + '\n'
+
+    # Write back to the file
+    with open(tasks_file, 'w') as file:
+        file.writelines(lines)
+
+    print("Task marked as complete in the file.")
+        
 
 def view_mine():
     '''Reads the task from task.txt file and prints to the console in the 
@@ -237,8 +275,22 @@ def view_mine():
 
         # Check if the entered task number is valid
         if task_menu in user_numbered_tasks:
-            edit_task()
-            break
+
+            while True:
+                print()
+                task_edit = input("Type 'm' to mark task complete or 'e' to edit task:").lower()
+
+                user_task = []
+
+                if task_edit == 'm':
+
+
+
+                elif task_edit == 'e':
+                    edit_task()
+                else:
+                    print("You didn't choose 'm' or 'e'")
+                    break
         elif task_menu == -1:
             break
         else:    
