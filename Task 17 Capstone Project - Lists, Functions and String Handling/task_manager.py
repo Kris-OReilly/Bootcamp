@@ -9,7 +9,7 @@
 import os
 from datetime import datetime, date
 
-DATETIME_STRING_FORMAT = "%Y-%m-%d"
+DATETIME_STRING_FORMAT = "%d-%m-%Y"
 
 # Create tasks.txt if it doesn't exist
 if not os.path.exists("tasks.txt"):
@@ -45,6 +45,7 @@ for t_str in task_data:
 if not os.path.exists("user.txt"):
     with open("user.txt", "w") as default_file:
         default_file.write("admin;password")
+    
 
 # Read in user_data
 with open("user.txt", 'r') as user_file:
@@ -106,6 +107,7 @@ def reg_user():
                     for k in username_password:
                         user_data.append(f"{k};{username_password[k]}")
                     out_file.write("\n".join(user_data))
+                    break
 
                 # - Otherwise you present a relevant message.
             else:
@@ -188,7 +190,7 @@ def update_tasks_file(tasks):
 
     # If tasks is a string, convert it to a list of dictionaries
     if isinstance(tasks, str):
-        tasks = [dict(zip(['username', 'title', 'description', 'due_date', 'assigned_date', 'completed'], task.split(',')))
+        tasks = [dict(zip(['username', 'title', 'description', 'due_date', 'assigned_date', 'completed'], task.split(';')))
                  for task in tasks.strip().split('\n')]
 
     with open("tasks.txt", "w") as file:
@@ -198,7 +200,7 @@ def update_tasks_file(tasks):
             
             # Write formatted task details to the file
             file.write(f"{task['username']},{task['title']},{task['description']},"
-                       f"{task['assigned_date'].strftime('%Y-%m-%d')},{task['due_date'].strftime('%Y-%m-%d')},"
+                       f"{task['assigned_date'].strftime('%d-%m-%Y')},{task['due_date'].strftime('%d-%m-%Y')},"
                        f"{completed_status}\n")
 
 
@@ -221,7 +223,7 @@ def edit_task(chosen_task, task_list):
     while True:
         try:
             new_due_date = input("New Due Date (DD-MM-YYYY):\t ")
-            due_date_time = datetime.strptime(new_due_date, "%Y-%m-%d")
+            due_date_time = datetime.strptime(new_due_date, "%d-%m-%Y")
             break  # Break the loop if the input is a valid date
         except ValueError:
             print("Invalid date format. Please enter the date in the format DD-MM-YYYY.")
@@ -232,7 +234,7 @@ def edit_task(chosen_task, task_list):
     
 
     try:
-        due_date_time = datetime.strptime(new_due_date, "%Y-%m-%d")
+        due_date_time = datetime.strptime(new_due_date, "%d-%m-%Y")
         # Update task attributes with new values
         chosen_task['username'] = new_username
         chosen_task['due_date'] = due_date_time
@@ -249,7 +251,7 @@ def edit_task(chosen_task, task_list):
 def mark_complete(tasks):
     # If tasks is a string, convert it to a list of dictionaries
     if isinstance(tasks, str):
-        tasks = [dict(zip(['username', 'title', 'description', 'due_date', 'assigned_date', 'completed'], task.split(',')))
+        tasks = [dict(zip(['username', 'title', 'description', 'due_date', 'assigned_date', 'completed'], task.split(';')))
                  for task in tasks.strip().split('\n')]
 
     with open("tasks.txt", "w") as file:
@@ -259,7 +261,7 @@ def mark_complete(tasks):
             
             # Write formatted task details to the file
             file.write(f"{task['username']},{task['title']},{task['description']},"
-                       f"{task['assigned_date'].strftime('%Y-%m-%d')},{task['due_date'].strftime('%Y-%m-%d')},"
+                       f"{task['assigned_date'].strftime('%d-%m-%Y')},{task['due_date'].strftime('%d-%m-%Y')},"
                        f"{completed_status}\n")
             
 
@@ -342,7 +344,7 @@ def load_tasks():
             lines = file.readlines()
 
         # Convert lines to a list of dictionaries
-        tasks = [dict(zip(['username', 'title', 'description', 'due_date', 'assigned_date', 'completed'], line.strip().split(',')))
+        tasks = [dict(zip(['username', 'title', 'description', 'due_date', 'assigned_date', 'completed'], line.strip().split(';')))
                  for line in lines]
 
         return tasks
@@ -367,8 +369,8 @@ def read_task_file():
                     "username": line_split[0],
                     "title": line_split[1],
                     "description": line_split[2],
-                    "due_date": datetime.strptime(line_split[3], "%Y-%m-%d"),
-                    "assigned_date": datetime.strptime(line_split[4], "%Y-%m-%d"),
+                    "due_date": datetime.strptime(line_split[3], "%d-%m-%Y"),
+                    "assigned_date": datetime.strptime(line_split[4], "%d-%m-%Y"),
                     "completed": line_split[5] == "Yes"
                 }
                 tasks.append(user_dict)
@@ -395,7 +397,7 @@ def generate_task_overview(task_list):
         elif "due_date" in task:
             due_date = task["due_date"]
             if isinstance(due_date, str):
-                due_date = datetime.strptime(due_date, "%Y-%m-%d")
+                due_date = datetime.strptime(due_date, "%d-%m-%Y")
 
             if datetime.today() > due_date:
                 incomplete_tasks += 1
@@ -485,67 +487,6 @@ def generate_user_overview(username_password, task_list):
             report_file.write(f"Percentage of Completed Tasks: \t {pc_completed:.0f}%\n")
             report_file.write(f"Percentage of Incomplete Tasks:  {pc_incomplete:.0f}%\n")
             report_file.write(f"Percentage of Overdue Tasks: \t {pc_overdue:.0f}%\n")
-
-
-# def generate_user_overview(username_password, task_list):
-#     # Function to generate a detailed overview of the tasks assigned to each user
-#     # This then writes the information to a text file.
-
-#     # Initiate variables for number of users and number of tasks
-#     total_users = len(username_password)
-#     total_tasks = len(task_list)
-
-#     with open("user_overview.txt", "w") as report_file:
-#         report_file.write("----------------------------------------\n")
-#         report_file.write("\tUser Overview Report\n\n")
-#         report_file.write(f"Total number of users: \t\t {total_users}\n")
-#         report_file.write(f"Total number of Tasks: \t\t {total_tasks}\n")
-#         report_file.write("-----------------------------------------\n")
-
-#         print("Inside generate_user_overview")  # Debug statement
-
-#         for current_user in sorted(username_password):
-#             print(f"Processing user: {current_user}")  # Debug statement
-
-#             user_tasks_list = [task for task in task_list if task['username'] == current_user]
-
-#             print(f"Tasks for user {current_user}: {user_tasks_list}")  # Debug statement
-
-#             user_total_tasks = len(user_tasks_list)
-#             print(f"Total tasks for user {current_user}: {user_total_tasks}")
-
-#             # Set variables to 0
-#             completed_tasks = 0
-#             incomplete_tasks = 0
-#             overdue_tasks = 0
-
-#             # For each task, update variables accordingly
-#             for user_task in user_tasks_list:
-#                 if user_task["completed"]:
-#                     completed_tasks += 1
-#                 elif datetime.today() > user_task["due_date"]:
-#                     incomplete_tasks += 1
-#                     overdue_tasks += 1
-#                 else:
-#                     incomplete_tasks += 1
-                
-#             # Calculate percentages for each variable
-#             try:
-#                 pc_assigned = (user_total_tasks / len(task_list)) * 100
-#                 pc_completed = (completed_tasks / user_total_tasks) * 100
-#                 pc_incomplete = (incomplete_tasks / user_total_tasks) * 100
-#                 pc_overdue = (overdue_tasks / user_total_tasks) * 100
-
-#             # If user has no tasks assigned, set all percentages to 0
-#             except ZeroDivisionError:
-#                 pc_assigned = pc_completed = pc_incomplete = pc_overdue = 0
-
-#             report_file.write(f"\nUser: \t\t\t\t {current_user}\n")
-#             report_file.write(f"Total Tasks Assigned: \t\t {user_total_tasks}\n")
-#             report_file.write(f"Percentage of Total Tasks: \t {pc_assigned:.0f}%\n")
-#             report_file.write(f"Percentage of Completed Tasks: \t {pc_completed:.0f}%\n")
-#             report_file.write(f"Percentage of Incomplete Tasks:  {pc_incomplete:.0f}%\n")
-#             report_file.write(f"Percentage of Overdue Tasks: \t {pc_overdue:.0f}%\n")
 
 
 
