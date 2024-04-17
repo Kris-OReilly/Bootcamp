@@ -351,7 +351,7 @@ def edit_task(chosen_task, task_list):
             due_date_time = datetime.strptime(new_due_date, "%Y-%m-%d")
             break  # Break the loop if the input is a valid date
         except ValueError:
-            print("Invalid date format. Please enter the date in the format DD-MM-YYYY.")
+            print("Invalid date format. Please enter the date in the format YYYY-MM-DD.")
 
 
     new_task = input("New Title:\t\t\t ")
@@ -445,6 +445,7 @@ def generate_user_overview(username_password, task_list):
 
     # Initiate variables for number of users and number of tasks
     total_users = len(username_password)
+    
 
     with open("user_overview.txt", "w") as report_file:
         report_file.write("----------------------------------------\n")
