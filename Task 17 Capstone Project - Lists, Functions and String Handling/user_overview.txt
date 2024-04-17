@@ -1,0 +1,26 @@
+----------------------------------------
+	User Overview Report
+
+Total number of users: 		 3
+-----------------------------------------
+
+User: 				 admin
+Total Tasks Assigned: 		 1
+Percentage of Total Tasks: 	 33%
+Percentage of Completed Tasks: 	 100%
+Percentage of Incomplete Tasks:  0%
+Percentage of Overdue Tasks: 	 0%
+
+User: 				 kris
+Total Tasks Assigned: 		 2
+Percentage of Total Tasks: 	 67%
+Percentage of Completed Tasks: 	 100%
+Percentage of Incomplete Tasks:  0%
+Percentage of Overdue Tasks: 	 0%
+
+User: 				 terri
+Total Tasks Assigned: 		 0
+Percentage of Total Tasks: 	 0%
+Percentage of Completed Tasks: 	 0%
+Percentage of Incomplete Tasks:  0%
+Percentage of Overdue Tasks: 	 0%

@@ -1,2 +1,3 @@
 admin;password
 kris;password
+terri;rosie
